@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0f">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self' data: gap: 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+<title>MindForge</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="screen-lock" class="screen">
+  <div class="lock-bg-grid"></div>
+  <div class="lock-center">
+    <div class="lock-logo">⚡</div>
+    <div class="lock-app-name">Mind<span>Forge</span></div>
+    <div class="lock-sub">Enter PIN to continue</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="dot0"></div>
+      <div class="pin-dot" id="dot1"></div>
+      <div class="pin-dot" id="dot2"></div>
+      <div class="pin-dot" id="dot3"></div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <div class="numpad">
+      <button class="np-btn" onclick="pinInput('1')">1</button>
+      <button class="np-btn" onclick="pinInput('2')">2</button>
+      <button class="np-btn" onclick="pinInput('3')">3</button>
+      <button class="np-btn" onclick="pinInput('4')">4</button>
+      <button class="np-btn" onclick="pinInput('5')">5</button>
+      <button class="np-btn" onclick="pinInput('6')">6</button>
+      <button class="np-btn" onclick="pinInput('7')">7</button>
+      <button class="np-btn" onclick="pinInput('8')">8</button>
+      <button class="np-btn" onclick="pinInput('9')">9</button>
+      <div></div>
+      <button class="np-btn" onclick="pinInput('0')">0</button>
+      <button class="np-btn np-del" onclick="pinDelete()">⌫</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<div id="screen-onboard" class="screen">
+  <div class="onboard-wrap">
+    <div class="ob-logo-hex">⚡</div>
+    <div class="ob-title">Mind<span>Forge</span></div>
+    <div class="ob-tagline">Sharpen. Daily. Dominate.</div>
+    <div class="ob-form">
+      <div class="avatar-picker" id="avatar-picker" onclick="document.getElementById('avatar-input').click()">
+        <img id="avatar-preview" src="" alt="" style="display:none">
+        <div id="avatar-placeholder">
+          <div style="font-size:32px">📷</div>
+          <div style="font-size:11px;margin-top:6px;color:var(--muted)">Tap to upload photo</div>
+        </div>
+      </div>
+      <input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+      <div class="ob-field-label">Your name</div>
+      <input type="text" id="ob-name" class="ob-input" placeholder="What do you go by?" maxlength="20" autocomplete="off">
+      <button class="ob-start-btn" onclick="startOnboard()">ENTER THE FORGE →</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="screen-home" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="user-avatar-sm" id="home-avatar" onclick="showScreen('screen-profile')"></div>
+      <div>
+        <div class="topbar-greeting" id="home-greeting">Hey,</div>
+        <div class="topbar-name" id="home-name">Forger</div>
+      </div>
+    </div>
+    <div class="session-timer-badge" id="session-badge">
+      <div class="timer-dot"></div>
+      <span id="session-display">15:00</span>
+    </div>
+  </div>
+
+  <div class="home-scroll">
+    <div class="daily-card">
+      <div class="daily-left">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="ring-track" cx="40" cy="40" r="34"/>
+          <circle class="ring-fill" id="ring-fill" cx="40" cy="40" r="34"/>
+          <text x="40" y="44" text-anchor="middle" font-size="13" font-weight="700" fill="#00e5ff" id="ring-pct">0%</text>
+        </svg>
+      </div>
+      <div class="daily-right">
+        <div class="daily-title">Today's Session</div>
+        <div class="daily-time"><span id="time-left-big">15</span> min left</div>
+        <div class="daily-progress"><span id="done-count">0</span>/6 challenges done</div>
+        <div class="streak-row">🔥 <span id="streak-count">0</span> day streak</div>
+      </div>
+    </div>
+
+    <div class="section-label">SKILL DOMAINS</div>
+    <div class="cat-grid" id="cat-grid"></div>
+
+    <div class="section-label">YOUR STATS</div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="sv" id="stat-xp">0</div><div class="sk">Total XP</div></div>
+      <div class="stat-box"><div class="sv" id="stat-level">1</div><div class="sk">Level</div></div>
+      <div class="stat-box"><div class="sv" id="stat-correct">0%</div><div class="sk">Accuracy</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="screen-game" class="screen">
+  <div class="game-bar">
+    <button class="back-btn" onclick="confirmBack()">←</button>
+    <div class="game-meta">
+      <div class="gm-cat" id="gm-cat"></div>
+      <div class="gm-qnum" id="gm-qnum"></div>
+    </div>
+    <div class="gm-pts" id="gm-pts">0 pts</div>
+  </div>
+  <div class="q-timer-wrap">
+    <div class="q-timer-track"><div class="q-timer-fill" id="q-timer-fill"></div></div>
+    <div class="q-timer-num" id="q-timer-num">30</div>
+  </div>
+  <div class="question-scroll" id="question-scroll">
+    <div class="q-badge-row">
+      <span class="q-type-tag" id="q-type-tag"></span>
+      <span class="q-diff-tag" id="q-diff-tag"></span>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-context" id="q-context"></div>
+    <pre class="code-block" id="code-block"></pre>
+    <div class="options-list" id="options-list"></div>
+    <div class="explain-panel" id="explain-panel"></div>
+    <button class="next-q-btn" id="next-q-btn" onclick="nextQuestion()">NEXT →</button>
+    <div style="height:30px"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-wrap">
+    <div class="res-icon" id="res-icon">🏆</div>
+    <div class="res-title" id="res-title">Session Complete!</div>
+    <div class="res-cat" id="res-cat"></div>
+    <div class="res-xp-big">+<span id="res-xp">0</span> <span style="font-size:18px;color:var(--muted)">XP</span></div>
+    <div class="res-grid">
+      <div class="res-box"><div class="rb-val" id="rb-correct">0/0</div><div class="rb-key">Correct</div></div>
+      <div class="res-box"><div class="rb-val" id="rb-acc">0%</div><div class="rb-key">Accuracy</div></div>
+      <div class="res-box"><div class="rb-val" id="rb-time">0s</div><div class="rb-key">Avg Time</div></div>
+    </div>
+    <div class="xp-level-bar">
+      <div class="xlb-labels"><span>Level <span id="xlb-level">1</span></span><span id="xlb-xp-txt">0/500</span></div>
+      <div class="xlb-track"><div class="xlb-fill" id="xlb-fill"></div></div>
+    </div>
+    <div class="res-wrong-section" id="res-wrong-section"></div>
+    <div class="res-btns">
+      <button class="btn-prim" onclick="goHome()">🏠 Back to Forge</button>
+      <button class="btn-sec" onclick="playAgain()">↺ Retry Domain</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="screen-profile" class="screen">
+  <div class="profile-bar">
+    <button class="back-btn" onclick="showScreen('screen-home')">←</button>
+    <div class="profile-bar-title">Profile</div>
+    <div></div>
+  </div>
+  <div class="profile-scroll">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar-ring">
+        <div class="profile-avatar-img" id="profile-avatar" onclick="document.getElementById('profile-avatar-input').click()"></div>
+        <div class="profile-avatar-edit">✏️</div>
+      </div>
+      <input type="file" id="profile-avatar-input" accept="image/*" style="display:none" onchange="handleProfileAvatarUpload(event)">
+      <div class="profile-name-edit">
+        <input type="text" id="profile-name-input" class="profile-name-field" maxlength="20" autocomplete="off">
+        <button class="profile-save-name" onclick="saveName()">Save</button>
+      </div>
+    </div>
+
+    <div class="profile-stats-grid">
+      <div class="ps-box"><div class="ps-val" id="ps-xp">0</div><div class="ps-key">Total XP</div></div>
+      <div class="ps-box"><div class="ps-val" id="ps-level">1</div><div class="ps-key">Level</div></div>
+      <div class="ps-box"><div class="ps-val" id="ps-streak">0</div><div class="ps-key">Streak</div></div>
+      <div class="ps-box"><div class="ps-val" id="ps-correct">0</div><div class="ps-key">Correct</div></div>
+      <div class="ps-box"><div class="ps-val" id="ps-acc">0%</div><div class="ps-key">Accuracy</div></div>
+      <div class="ps-box"><div class="ps-val" id="ps-sessions">0</div><div class="ps-key">Sessions</div></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">SECURITY</div>
+      <div class="setting-row" id="auth-toggle-row">
+        <div class="setting-info">
+          <div class="setting-name">App PIN Lock</div>
+          <div class="setting-desc">Require PIN to open MindForge</div>
+        </div>
+        <div class="toggle-wrap" onclick="toggleAuth()">
+          <div class="toggle-track" id="auth-track">
+            <div class="toggle-thumb" id="auth-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pin-setup-section" style="display:none">
+        <div class="pin-setup-label" id="pin-setup-label">Set a 4-digit PIN</div>
+        <div class="pin-setup-dots" id="setup-dots">
+          <div class="pin-dot" id="sd0"></div>
+          <div class="pin-dot" id="sd1"></div>
+          <div class="pin-dot" id="sd2"></div>
+          <div class="pin-dot" id="sd3"></div>
+        </div>
+        <div class="setup-numpad">
+          <button class="np-btn" onclick="setupPinInput('1')">1</button>
+          <button class="np-btn" onclick="setupPinInput('2')">2</button>
+          <button class="np-btn" onclick="setupPinInput('3')">3</button>
+          <button class="np-btn" onclick="setupPinInput('4')">4</button>
+          <button class="np-btn" onclick="setupPinInput('5')">5</button>
+          <button class="np-btn" onclick="setupPinInput('6')">6</button>
+          <button class="np-btn" onclick="setupPinInput('7')">7</button>
+          <button class="np-btn" onclick="setupPinInput('8')">8</button>
+          <button class="np-btn" onclick="setupPinInput('9')">9</button>
+          <div></div>
+          <button class="np-btn" onclick="setupPinInput('0')">0</button>
+          <button class="np-btn np-del" onclick="setupPinDelete()">⌫</button>
+        </div>
+        <div class="pin-setup-status" id="pin-setup-status"></div>
+        <button class="btn-danger" id="remove-pin-btn" onclick="removePin()" style="display:none;margin-top:16px">Remove PIN</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">DANGER ZONE</div>
+      <button class="btn-danger" onclick="resetData()">Reset All Progress</button>
+    </div>
+    <div style="height:40px"></div>
+  </div>
+</div>
+
+<!-- DAY LOCK -->
+<div id="screen-daylocked" class="screen">
+  <div class="daylock-center">
+    <div style="font-size:64px;margin-bottom:20px">🔒</div>
+    <div class="daylock-title">Daily Limit Hit</div>
+    <div class="daylock-sub">15 minutes used. Rest.<br>Let it consolidate. Come back tomorrow.</div>
+    <div class="daylock-countdown" id="daylock-countdown">23:59:59</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Until next session</div>
+    <div style="font-size:14px;color:var(--muted)">Today's XP: <span id="daylock-xp" style="color:var(--accent);font-weight:700">0</span></div>
+  </div>
+</div>
+
+<!-- Cordova is injected at runtime on device -->
+<script src="cordova.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.mindforge.app" version="1.0.0"
+  xmlns="http://www.w3.org/ns/widgets"
+  xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+  <name>MindForge</name>
+  <description>Sharpen. Daily. Dominate.</description>
+  <author email="dev@mindforge.app" href="">MindForge</author>
+
+  <content src="index.html" />
+
+  <!-- ── Permissions ── -->
+  <access origin="*" />
+  <allow-intent href="*" />
+  <allow-navigation href="*" />
+
+  <!-- ── Android Preferences ── -->
+  <preference name="android-minSdkVersion" value="22" />
+  <preference name="android-targetSdkVersion" value="34" />
+  <preference name="AndroidLaunchMode" value="singleTop" />
+
+  <!-- Splash + Status Bar -->
+  <preference name="SplashScreen" value="screen" />
+  <preference name="SplashScreenDelay" value="1000" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="FadeSplashScreenDuration" value="300" />
+  <preference name="StatusBarBackgroundColor" value="#0a0a0f" />
+  <preference name="StatusBarStyle" value="lightcontent" />
+  <preference name="StatusBarOverlaysWebView" value="false" />
+
+  <!-- Full screen / immersive -->
+  <preference name="Fullscreen" value="false" />
+  <preference name="ShowTitle" value="false" />
+  <preference name="KeepRunning" value="true" />
+
+  <!-- WebView -->
+  <preference name="AllowInlineMediaPlayback" value="true" />
+  <preference name="MediaPlaybackRequiresUserAction" value="false" />
+  <preference name="BackgroundColor" value="#0a0a0f" />
+  <preference name="DisallowOverscroll" value="true" />
+  <preference name="HideKeyboardFormAccessoryBar" value="true" />
+
+  <!-- Orientation locked to portrait -->
+  <preference name="Orientation" value="portrait" />
+
+  <!-- Icon (replace res/icon/icon.png with your own 1024x1024 icon) -->
+  <icon src="res/icon/icon.png" />
+
+  <!-- Splash screens -->
+  <splash src="res/screen/splash.png" />
+
+  <!-- Plugins -->
+  <plugin name="cordova-plugin-splashscreen" />
+  <plugin name="cordova-plugin-statusbar" />
+  <plugin name="cordova-plugin-whitelist" />
+
+  <!-- Android platform overrides -->
+  <platform name="android">
+    <preference name="android-targetSdkVersion" value="34" />
+    <allow-intent href="market:*" />
+    <!-- Adaptive icon (optional — add res/icon/foreground.png + background.png) -->
+    <!-- <icon background="res/icon/background.png" density="xxxhdpi" foreground="res/icon/foreground.png" /> -->
+  </platform>
+
+</widget>
